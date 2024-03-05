@@ -2,9 +2,9 @@
 
 Hey Thinkz! here the test.
 
-I used redux-toolkit not sure it you prefred the old one.
-I styled with css (even if I'm more used to work with libraries like styled-components)
-I used only the library mapbox-gl maybe I should have used something like react-map-gl
+I used redux-toolkit not sure if you prefred the old one.\
+I styled with css (even if I'm more used to work with libraries like styled-components).\
+I used only the library mapbox-gl maybe I should have used something like react-map-gl.\
 
 Thanks !
 

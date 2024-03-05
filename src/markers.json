@@ -1,0 +1,32 @@
+[
+    {
+      "id": "1",
+      "properties": {
+        "color": "red"
+      },
+        "coordinates": {
+          "lat": 32.088777452,
+          "lng": 34.781800515
+        }
+    },
+    {
+      "id": "2",
+      "properties": {
+        "color": "green"
+      },
+      "coordinates": {
+        "lat": 32.076593575,
+        "lng": 34.793269694
+      }
+    },
+    {
+      "id": "3",
+      "properties": {
+        "color": "blue"
+      },
+      "coordinates": {
+        "lat": 32.064936193,
+        "lng": 34.763176778
+      }
+    }
+  ]

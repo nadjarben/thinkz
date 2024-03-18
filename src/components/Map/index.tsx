@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
-import { createRoot } from "react-dom/client";
 import { Coordinates } from "../../types/coordinates";
-import { MarkerData } from "../../types/markers";
+import { MarkersState } from "../../store/types/markers";
 import Marker from "../Marker";
 import "./Map.css";
 
@@ -10,18 +9,13 @@ mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || "";
 
 interface MapProps {
   coordinates: Coordinates;
-  markers: MarkerData[];
-  markerClicks: { [key: string]: number };
+  markers: MarkersState[];
   onMarkerClick: (id: string) => void;
 }
-const Map: React.FC<MapProps> = ({
-  coordinates,
-  markers,
-  markerClicks,
-  onMarkerClick,
-}) => {
+const Map: React.FC<MapProps> = ({ coordinates, markers, onMarkerClick }) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const markerRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -42,31 +36,30 @@ const Map: React.FC<MapProps> = ({
   useEffect(() => {
     if (!mapRef.current) return;
 
-    markers.forEach((marker) => {
-      const markerElement = document.createElement("div");
-
-      const root = createRoot(markerElement);
-      root.render(
-        <Marker
-          color={marker.properties.color}
-          count={markerClicks[marker.id] || 0}
-          id={marker.id}
-          onClick={() => onMarkerClick(marker.id)}
-        />
-      );
+    markers.forEach((marker, index) => {
+      const markerElement = markerRefs.current[index];
+      if (!markerElement) return;
 
       new mapboxgl.Marker(markerElement)
         .setLngLat([marker.coordinates.lng, marker.coordinates.lat])
         .addTo(mapRef.current!);
+
+      return () => markerElement.remove();
     });
-  }, [markerClicks, markers, onMarkerClick]);
+  }, [markers]);
 
   return (
-    <div
-      className="map-container"
-      data-testid="map-container"
-      ref={mapContainerRef}
-    />
+    <div ref={mapContainerRef} className="map-container">
+      {markers.map((marker, index) => (
+        <Marker
+          key={marker.id}
+          ref={(el) => (markerRefs.current[index] = el)}
+          color={marker.properties.color}
+          count={marker.count}
+          onClick={() => onMarkerClick(marker.id)}
+        />
+      ))}
+    </div>
   );
 };
 
